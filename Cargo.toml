@@ -1,6 +1,16 @@
 [package]
 name = "netsblox-dsp-library"
 version = "0.1.0"
+authors = ["Gabriel Barnard <gabriel.h.barnard@vanderbilt.edu>"]
+license = "MIT/Apache-2.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
+wasm-bindgen = "0.2"
+rustfft = "6.2.0"
+
+[package.metadata.wasm-pack.profile.profiling]
+wasm-opt = ["-01"]

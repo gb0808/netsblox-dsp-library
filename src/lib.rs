@@ -1,14 +1,15 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+use rustfft::{FftPlanner, num_complex::Complex};
+use wasm_bindgen::prelude::*;
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[wasm_bindgen]
+pub fn fourier_transform(signal: &[f32]) -> Vec<f32> {
+    let mut planner = FftPlanner::new();
+    let fft = planner.plan_fft_forward(signal.len());
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+    let mut buffer: Vec<Complex<f32>> = signal.into_iter()
+                                              .map(|sample| Complex::new(*sample, 0.0))
+                                              .collect();
+    fft.process(&mut buffer);
+
+    buffer.into_iter().map(|bin| bin.norm()).collect()
 }

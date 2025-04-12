@@ -3,33 +3,33 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub fn normalize(signal: &[f32]) -> Vec<f32> {
-    let mut max: f32 = 0.0;
-    signal.into_iter().for_each(|&sample| {
-        if sample > max {
-            max = sample;
-        }
-    });
-    if max == 0.0 {
-        return vec![0.0; signal.len()]
+  let mut max: f32 = 0.0;
+  signal.into_iter().for_each(|&sample| {
+    if sample > max {
+      max = sample;
     }
-    signal.into_iter().map(|sample| *sample / max).collect()
+  });
+  if max == 0.0 {
+    return vec![0.0; signal.len()]
+  }
+  signal.into_iter().map(|sample| *sample / max).collect()
 }
 
 #[wasm_bindgen]
 pub fn join(signal_a: &[f32], signal_b: &[f32]) -> Vec<f32> {
-    let signal_length = signal_a.len().max(signal_b.len());
-    let a_iter = signal_a.into_iter().chain(std::iter::once(&0.0).cycle());
-    let b_iter = signal_b.into_iter().chain(std::iter::once(&0.0).cycle());
-    a_iter.zip(b_iter).take(signal_length).map(|(a, b)| a + b).collect()
+  let signal_length = signal_a.len().max(signal_b.len());
+  let a_iter = signal_a.into_iter().chain(std::iter::once(&0.0).cycle());
+  let b_iter = signal_b.into_iter().chain(std::iter::once(&0.0).cycle());
+  a_iter.zip(b_iter).take(signal_length).map(|(a, b)| a + b).collect()
 }
 
 #[wasm_bindgen]
 pub fn fourier_transform(signal: &[f32]) -> Vec<f32> {
-    let mut planner = FftPlanner::new();
-    let fft = planner.plan_fft_forward(signal.len());
-    let mut buffer: Vec<Complex<f32>> = signal.into_iter()
-                                              .map(|sample| Complex::new(*sample, 0.0))
-                                              .collect();
-    fft.process(&mut buffer);
-    buffer.into_iter().map(|bin| bin.norm()).collect()
+  let mut planner = FftPlanner::new();
+  let fft = planner.plan_fft_forward(signal.len());
+  let mut buffer: Vec<Complex<f32>> = signal.into_iter()
+                                            .map(|sample| Complex::new(*sample, 0.0))
+                                            .collect();
+  fft.process(&mut buffer);
+  buffer.into_iter().map(|bin| bin.norm()).collect()
 }

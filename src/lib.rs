@@ -1,3 +1,4 @@
+mod buffer;
 mod oscillators;
 
 use rustfft::{FftPlanner, num_complex::Complex};

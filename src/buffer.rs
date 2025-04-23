@@ -1,3 +1,4 @@
+use crate::DEFAULT_SAMPLE_RATE;
 use crate::oscillators::Oscillator;
 
 pub struct AudioBuffer {
@@ -13,10 +14,18 @@ impl AudioBuffer {
       src: oscillator.take(duration * sample_rate as usize).collect::<Vec<f32>>()
     }
   }
+
+  pub fn from_raw(samples: &[f32], sample_rate: Option<u32>) -> Self {
+    Self {
+      sample_rate: sample_rate.unwrap_or(DEFAULT_SAMPLE_RATE),
+      src: samples.to_vec()
+    }
+  }
 }
 
 #[cfg(test)]
 mod tests {
+  use crate::DEFAULT_SAMPLE_RATE;
   use crate::buffer::AudioBuffer;
   use crate::oscillators::{OscillatorType, Oscillator};
 
@@ -25,7 +34,15 @@ mod tests {
     let oscillator = Oscillator::new(OscillatorType::SINE, 440.0, None);
     let duration = 2;
     let buffer = AudioBuffer::from_oscillator(oscillator, duration);
-    assert_eq!(buffer.sample_rate, 44100);
-    assert_eq!(buffer.src.len(), 44100 * 2);
+    assert_eq!(buffer.sample_rate, DEFAULT_SAMPLE_RATE);
+    assert_eq!(buffer.src.len(), DEFAULT_SAMPLE_RATE as usize * 2);
+  }
+
+  #[test]
+  fn test_from_raw() {
+    let samples = [0.0; 1000];
+    let buffer = AudioBuffer::from_raw(&samples, None);
+    assert_eq!(buffer.sample_rate, DEFAULT_SAMPLE_RATE);
+    assert_eq!(buffer.src.len(), 1000);
   }
 }

@@ -4,6 +4,8 @@ mod oscillators;
 use rustfft::{FftPlanner, num_complex::Complex};
 use wasm_bindgen::prelude::*;
 
+const DEFAULT_SAMPLE_RATE: u32 = 44100;
+
 fn autocorrelation_function_inner(signal: &[f32], lag: usize, window_size: usize) -> f32 {
   let signal_window = &signal[..window_size];
   let (shifted_start, shifted_end) = (lag, lag + window_size);

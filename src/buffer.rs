@@ -18,11 +18,11 @@ impl AudioBuffer {
 #[cfg(test)]
 mod tests {
   use crate::buffer::AudioBuffer;
-  use crate::oscillators::{OscillatorType, oscillator};
+  use crate::oscillators::{OscillatorType, Oscillator};
 
   #[test]
   fn test_from_oscillator() {
-    let oscillator = oscillator(440.0, 44100, OscillatorType::SINE);
+    let oscillator = Oscillator::new(OscillatorType::SINE, 440.0, None);
     let duration = 2;
     let buffer = AudioBuffer::from_oscillator(oscillator, duration);
     assert_eq!(buffer.sample_rate, 44100);

@@ -1,3 +1,4 @@
+use crate::DEFAULT_SAMPLE_RATE;
 use num_traits::sign::signum;
 use std::f32::consts::{PI, FRAC_PI_2};
 
@@ -9,10 +10,21 @@ pub enum OscillatorType {
 }
 
 pub struct Oscillator {
+  pub oscillator_type: OscillatorType,
   pub frequency: f32,
   pub sample_rate: u32, 
-  pub oscillator_type: OscillatorType,
   curr: usize
+}
+
+impl Oscillator {
+  pub fn new(oscillator_type: OscillatorType, frequency: f32, sample_rate: Option<u32>) -> Self {
+    Self {
+      oscillator_type,
+      frequency,
+      sample_rate: sample_rate.unwrap_or(DEFAULT_SAMPLE_RATE),
+      curr: 0
+    }
+  }
 }
 
 impl Iterator for Oscillator {
@@ -30,16 +42,13 @@ impl Iterator for Oscillator {
   } 
 }
 
-pub fn oscillator(frequency: f32, sample_rate: u32, oscillator_type: OscillatorType) -> Oscillator {
-  Oscillator { frequency, sample_rate, oscillator_type, curr: 0 }
-}
 
 #[cfg(test)]
 mod tests {
   use assert_approx_eq::assert_approx_eq;
   use num_traits::sign::signum;
   use std::f32::consts::{PI, FRAC_PI_2};
-  use super::{OscillatorType, oscillator};
+  use super::{OscillatorType, Oscillator};
 
   fn sine(x: f32) -> f32 {
     (2.0 * PI * x).sin()
@@ -61,8 +70,10 @@ mod tests {
   fn sine_1() {
     let freq = 1.0;
     let sample_rate = 2000;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::SINE).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| sine(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::SINE, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| sine(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -71,8 +82,10 @@ mod tests {
   fn sine_440() {
     let freq = 440.0;
     let sample_rate = 100;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::SINE).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| sine(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::SINE, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| sine(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -80,8 +93,10 @@ mod tests {
   fn sine_660() {
     let freq = 660.0;
     let sample_rate = 1000;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::SINE).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| sine(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::SINE, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| sine(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -89,8 +104,10 @@ mod tests {
   fn square_1() {
     let freq = 1.0;
     let sample_rate = 2000;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::SQUARE).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| square(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::SQUARE, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| square(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -99,8 +116,10 @@ mod tests {
   fn square_440() {
     let freq = 440.0;
     let sample_rate = 100;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::SQUARE).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| square(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::SQUARE, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| square(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -108,8 +127,10 @@ mod tests {
   fn square_660() {
     let freq = 660.0;
     let sample_rate = 1000;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::SQUARE).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| square(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::SQUARE, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| square(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -117,8 +138,10 @@ mod tests {
   fn triangle_1() {
     let freq = 1.0;
     let sample_rate = 2000;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::TRIANGLE).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| triangle(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::TRIANGLE, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| triangle(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -127,8 +150,10 @@ mod tests {
   fn triangle_440() {
     let freq = 440.0;
     let sample_rate = 100;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::TRIANGLE).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| triangle(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::TRIANGLE, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| triangle(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -136,8 +161,10 @@ mod tests {
   fn triangle_660() {
     let freq = 660.0;
     let sample_rate = 1000;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::TRIANGLE).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| triangle(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::TRIANGLE, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| triangle(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -145,8 +172,10 @@ mod tests {
   fn sawtooth_1() {
     let freq = 1.0;
     let sample_rate = 2000;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::SAWTOOTH).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| sawtooth(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::SAWTOOTH, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| sawtooth(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -155,8 +184,10 @@ mod tests {
   fn sawtooth_440() {
     let freq = 440.0;
     let sample_rate = 100;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::SAWTOOTH).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| sawtooth(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::SAWTOOTH, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| sawtooth(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 
@@ -164,8 +195,10 @@ mod tests {
   fn sawtooth_660() {
     let freq = 660.0;
     let sample_rate = 1000;
-    let buffer = oscillator(freq, sample_rate, OscillatorType::SAWTOOTH).take(100).collect::<Vec<f32>>();
-    let control = (0..100).map(|i| sawtooth(freq * i as f32 / sample_rate as f32)).collect::<Vec<f32>>();
+    let oscillator = Oscillator::new(OscillatorType::SAWTOOTH, freq, Some(sample_rate));
+    let buffer = oscillator.take(100).collect::<Vec<f32>>();
+    let control = (0..100).map(|i| sawtooth(freq * i as f32 / sample_rate as f32))
+                          .collect::<Vec<f32>>();
     buffer.into_iter().zip(control.into_iter()).for_each(|(b, c)| assert_approx_eq!(b, c)); 
   }
 }

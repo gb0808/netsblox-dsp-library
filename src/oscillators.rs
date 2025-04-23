@@ -9,9 +9,9 @@ pub enum OscillatorType {
 }
 
 pub struct Oscillator {
-  frequency: f32,
-  sample_rate: u32, 
-  oscillator_type: OscillatorType,
+  pub frequency: f32,
+  pub sample_rate: u32, 
+  pub oscillator_type: OscillatorType,
   curr: usize
 }
 

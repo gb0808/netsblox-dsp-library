@@ -1,3 +1,5 @@
+mod oscillators;
+
 use rustfft::{FftPlanner, num_complex::Complex};
 use wasm_bindgen::prelude::*;
 

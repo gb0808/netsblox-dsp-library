@@ -11,6 +11,8 @@ crate-type = ["cdylib"]
 [dependencies]
 wasm-bindgen = "0.2"
 rustfft = "6.2.0"
+num-traits = "0.2.19"
+assert_approx_eq = "1.1.0"
 
 [package.metadata.wasm-pack.profile.profiling]
 wasm-opt = ["-01"]

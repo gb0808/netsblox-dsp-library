@@ -27,5 +27,5 @@ pub fn netsblox_oscillator(oscillator_type_str: &str, frequency: f32, duration: 
 pub fn netsblox_delay(signal: &[f32], delay_time: f32) -> Vec<f32> {
   let mut buffer = AudioBuffer::from_raw(signal, None);
   AudioEffect::delay(&mut buffer, delay_time);
-  buffer.src.clone()
+  buffer.src
 }

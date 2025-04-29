@@ -1,5 +1,6 @@
 mod buffer;
 mod effects;
+mod midi;
 mod oscillators;
 
 use wasm_bindgen::prelude::*;

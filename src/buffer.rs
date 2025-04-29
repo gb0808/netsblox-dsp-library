@@ -2,8 +2,8 @@ use crate::DEFAULT_SAMPLE_RATE;
 use crate::oscillators::Oscillator;
 
 pub struct AudioBuffer {
-  sample_rate: u32,
-  src: Vec<f32>
+  pub sample_rate: u32,
+  pub src: Vec<f32>
 }
 
 impl AudioBuffer {

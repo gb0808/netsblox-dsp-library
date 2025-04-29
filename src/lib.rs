@@ -13,10 +13,10 @@ const DEFAULT_SAMPLE_RATE: u32 = 44100;
 #[wasm_bindgen]
 pub fn netsblox_oscillator(oscillator_type_str: &str, frequency: f32, duration: f32) -> Vec<f32> {
   let oscillator_type = match oscillator_type_str {
-    "sine" => OscillatorType::SINE,
-    "square" => OscillatorType::SQUARE,
-    "sawtooth" => OscillatorType::SAWTOOTH,
-    "triangle" => OscillatorType::TRIANGLE,
+    "sine" => OscillatorType::Sine,
+    "square" => OscillatorType::Square,
+    "sawtooth" => OscillatorType::Sawtooth,
+    "triangle" => OscillatorType::Triangle,
     _ => panic!("wave type not supported")
   };
   let size = (DEFAULT_SAMPLE_RATE as f32 * duration).floor() as usize;

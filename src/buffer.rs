@@ -31,7 +31,7 @@ mod tests {
 
   #[test]
   fn test_from_oscillator() {
-    let oscillator = Oscillator::new(OscillatorType::SINE, 440.0, None);
+    let oscillator = Oscillator::new(OscillatorType::Sine, 440.0, None);
     let duration = 2;
     let buffer = AudioBuffer::from_oscillator(oscillator, duration);
     assert_eq!(buffer.sample_rate, DEFAULT_SAMPLE_RATE);
